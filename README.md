@@ -1,2 +1,2 @@
 # ew
-Codes for earthworm genome paper
+Codes for earthworm genome assembly.
