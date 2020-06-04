@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-06-04 Thu 20:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Earthworm genome assembly</title>
+<meta name="generator" content="Org mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Earthworm genome assembly</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org373120a">1. Canu assembly</a></li>
+<li><a href="#orgc7800c1">2. FALCON assembly</a></li>
+<li><a href="#orgae23289">3. MECAT assembly</a></li>
+<li><a href="#org39798f3">4. Polishing by PacBio reads (for FALCON assembly)</a>
+<ul>
+<li><a href="#org0a17810">4.1. BLASR mapping</a></li>
+<li><a href="#org7193c64">4.2. Sort and pbindex</a></li>
+<li><a href="#orgc1bde49">4.3. Run arrow</a></li>
+<li><a href="#org402cb76">4.4. Combine fasta generated by arrow</a></li>
+</ul>
+</li>
+<li><a href="#orga3bf761">5. Polishing by illumina reads (for FALCON assembly)</a></li>
+<li><a href="#org2980a8d">6. Scaffolding by Hi-C reads</a></li>
+<li><a href="#org85af174">7. Gap closing</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org373120a" class="outline-2">
+<h2 id="org373120a"><span class="section-number-2">1</span> Canu assembly</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>canu.conf</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-conf"><span style="color: #008b8b;">genomeSize</span>=1g
+<span style="color: #008b8b;">java</span>=/mnt/nfs1/software/jre1.8.0_141/bin/java
+<span style="color: #008b8b;">gnuplot</span>=/mnt/nfs1/build/gnuplot-5.2.2/bin/gnuplot
+<span style="color: #008b8b;">gnuplotImageFormat</span>=svg
+<span style="color: #008b8b;">gridEngine</span>=slurm
+</pre>
+</div>
+
+<p>
+Run Canu:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">/mnt/nfs1/software/canu/Linux-amd64/bin/canu -s canu.conf -p ew -d /mnt/nfs46/ew/assembly -pacbio-raw data/subreads/*fq.gz
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc7800c1" class="outline-2">
+<h2 id="orgc7800c1"><span class="section-number-2">2</span> FALCON assembly</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<code>ew.cfg</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-conf">[<span style="color: #228b22;">General</span>]
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">list of files of the initial subread fasta files</span>
+<span style="color: #008b8b;">input_fofn</span> = input.fofn
+
+<span style="color: #008b8b;">input_type</span> = raw
+<span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">input_type = preads</span>
+
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">The length cutoff used for seed reads used for initial mapping</span>
+<span style="color: #008b8b;">length_cutoff</span> = 12000
+
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">The length cutoff used for seed reads usef for pre-assembly</span>
+<span style="color: #008b8b;">length_cutoff_pr</span> = 12000
+
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Cluster queue setting</span>
+<span style="color: #008b8b;">job_type</span> = SLURM
+<span style="color: #008b8b;">jobqueue</span> = serial
+<span style="color: #008b8b;">sge_option_da</span> = --ntasks 1 --nodes 1 --cpus-per-task 8 --mem 10g --time 00:20:00
+<span style="color: #008b8b;">sge_option_la</span> = --ntasks 1 --nodes 1 --cpus-per-task 2 --mem 10g --time 00:05:00
+<span style="color: #008b8b;">sge_option_pda</span> = --ntasks 1 --nodes 1 --cpus-per-task 8 --mem 15g --time 00:20:00
+<span style="color: #008b8b;">sge_option_pla</span> = --ntasks 1 --nodes 1 --cpus-per-task 2 --mem 10g --time 00:05:00
+<span style="color: #008b8b;">sge_option_fc</span> = --ntasks 1 --nodes 1 --cpus-per-task 16 --mem 10g --time 00:20:00
+<span style="color: #008b8b;">sge_option_cns</span> = --ntasks 1 --nodes 1 --cpus-per-task 8 --mem 10g --time 00:20:00
+
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">concurrency settgin</span>
+<span style="color: #008b8b;">pa_concurrent_jobs</span> = 24
+<span style="color: #008b8b;">cns_concurrent_jobs</span> = 24
+<span style="color: #008b8b;">ovlp_concurrent_jobs</span> = 24
+
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">overlapping options for Daligner</span>
+<span style="color: #008b8b;">pa_HPCdaligner_option</span> =  -v -B4 -t16 -e.70 -l1000 -s1000
+<span style="color: #008b8b;">ovlp_HPCdaligner_option</span> = -v -B4 -t32 -h60 -e.96 -l500 -s1000
+
+<span style="color: #008b8b;">pa_DBsplit_option</span> = -x500 -s50
+<span style="color: #008b8b;">ovlp_DBsplit_option</span> = -x500 -s50
+
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">error correction consensus optione</span>
+<span style="color: #008b8b;">falcon_sense_option</span> = --output_multi --min_idt 0.70 --min_cov 4 --max_n_read 200 --n_core 6
+
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">overlap filtering options</span>
+<span style="color: #008b8b;">overlap_filtering_setting</span> = --max_diff 100 --max_cov 100 --min_cov 20 --bestn 10
+</pre>
+</div>
+
+<p>
+Run FALCON:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">fc_run ew.cfg
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgae23289" class="outline-2">
+<h2 id="orgae23289"><span class="section-number-2">3</span> MECAT assembly</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #a52a2a;">cd</span> /mnt/nfs46/ew/data/subreads/
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">convert fastq to fasta and split to proper size</span>
+<span style="color: #a52a2a;">for</span> fq<span style="color: #a52a2a;"> in</span> /mnt/nfs46/ew/data/subreads/*.fq.gz; <span style="color: #a52a2a;">do</span>
+    <span style="color: #008b8b;">fa</span>=$(<span style="color: #a52a2a;">echo</span> <span style="color: #008b8b;">$fq</span> | sed <span style="color: #8b2252;">'s/fq\.gz$/fasta/'</span>)
+    gzip -dc <span style="color: #008b8b;">$fq</span> | perl -wne <span style="color: #8b2252;">'s/^@/&gt;/ and </span><span style="color: #008b8b;">$seq</span><span style="color: #8b2252;">=&lt;&gt; and print qq/</span><span style="color: #008b8b;">$_$seq</span><span style="color: #8b2252;">/'</span>
+<span style="color: #a52a2a;">done</span> | split -l100000 -a3 -d --additional-suffix=.fasta - pb
+
+<span style="color: #008b8b;">fa</span>=<span style="color: #8b2252;">'/mnt/nfs46/ew/data/subreads/all.fasta'</span>
+cat pb* &gt;<span style="color: #008b8b;">$fa</span>
+<span style="color: #a52a2a;">source</span> /mnt/nfs1/software/MECAT/source.sh
+<span style="color: #008b8b;">outdir</span>=<span style="color: #8b2252;">'/mnt/nfs46/ew/assembly-mecat/run'</span>
+<span style="color: #008b8b;">out</span>=<span style="color: #8b2252;">'ew.pm.can'</span>
+<span style="color: #a52a2a;">cd</span> <span style="color: #008b8b;">$outdir</span>
+<span style="color: #a52a2a;">ulimit</span> -v 200000000
+/mnt/nfs1/software/MECAT/Linux-amd64/bin/mecat2pw -j 0 -d <span style="color: #008b8b;">$fa</span> -o <span style="color: #008b8b;">$out</span> -w <span style="color: #008b8b;">$outdir</span> -t 48
+<span style="color: #008b8b;">out_cns</span>=<span style="color: #8b2252;">'ew.cns.filtered'</span>
+mecat2cns -i 0 -t 48 <span style="color: #008b8b;">$out</span> <span style="color: #008b8b;">$fa</span> <span style="color: #008b8b;">$out_cns</span>
+<span style="color: #008b8b;">out_step3</span>=<span style="color: #8b2252;">'ew.25x.fasta'</span>
+extract_sequences <span style="color: #008b8b;">$out_cns</span> <span style="color: #008b8b;">$out_cns</span> 1200000000 25
+mecat2canu -trim-assemble -s /mnt/nfs48/p1/ew/assembly-mecat/code/mecat.conf -p ew-mecat -d ew-mecat -pacbio-corrected /mnt/nfs48/p1/ew/assembly-mecat/run/ew.25x.fasta.fasta
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org39798f3" class="outline-2">
+<h2 id="org39798f3"><span class="section-number-2">4</span> Polishing by PacBio reads (for FALCON assembly)</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org0a17810" class="outline-3">
+<h3 id="org0a17810"><span class="section-number-3">4.1</span> BLASR mapping</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+<code>blasr-falcon-for-arrow.sh</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #a52a2a;">set</span> -eu
+date <span style="color: #ff4500;">&amp;&amp;</span> hostname
+<span style="color: #008b8b;">blasr</span>=<span style="color: #8b2252;">'/mnt/nfs1/build/smrtlink_5.0.1/smrtcmds/bin/blasr'</span>
+<span style="color: #008b8b;">reads_list</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/data/subreads/list-bam.txt'</span>
+<span style="color: #008b8b;">i</span>=<span style="color: #008b8b;">$SLURM_ARRAY_TASK_ID</span>
+<span style="color: #008b8b;">reads</span>=$(sed -n <span style="color: #008b8b;">${i}</span>p <span style="color: #008b8b;">$reads_list</span>)
+<span style="color: #008b8b;">ref</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/merge/p_ctg.fa'</span>
+<span style="color: #008b8b;">t</span>=32
+<span style="color: #008b8b;">outdir</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/merge/align-falcon'</span>
+<span style="color: #008b8b;">out</span>=<span style="color: #8b2252;">"</span><span style="color: #008b8b;">$outdir</span><span style="color: #8b2252;">/$(basename </span><span style="color: #008b8b;">$reads</span><span style="color: #8b2252;">).blasr.bam"</span>
+
+<span style="color: #008b8b;">$blasr</span> <span style="color: #8b2252;">"</span><span style="color: #008b8b;">$reads</span><span style="color: #8b2252;">"</span> <span style="color: #008b8b;">$ref</span> --nproc <span style="color: #008b8b;">$t</span> --out <span style="color: #008b8b;">$out</span> --bam
+<span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] [i=</span><span style="color: #008b8b;">$i</span><span style="color: #8b2252;">] done blasr for </span><span style="color: #008b8b;">$reads</span><span style="color: #8b2252;">"</span>
+</pre>
+</div>
+
+<p>
+Submit jobs:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sbatch -D <span style="color: #008b8b;">$PWD</span> -c32 --mem=60000 -a 1-15 -o /mnt/nfs1/slurm-log/blasr-%A_%a.out -e /mnt/nfs1/slurm-log/blasr-%A_%a.err blasr-falcon-for-arrow.sh
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7193c64" class="outline-3">
+<h3 id="org7193c64"><span class="section-number-3">4.2</span> Sort and pbindex</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+<code>blasr-falcon-for-arrow-sort-bam.sh</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #a52a2a;">set</span> -eu
+<span style="color: #008b8b;">list</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/merge/align-falcon/list-blasr-bam.txt'</span>
+<span style="color: #008b8b;">i</span>=<span style="color: #008b8b;">$SLURM_ARRAY_TASK_ID</span>
+<span style="color: #008b8b;">bam</span>=$(sed -n <span style="color: #008b8b;">${i}</span>p <span style="color: #008b8b;">$list</span>)
+<span style="color: #008b8b;">t</span>=48
+<span style="color: #008b8b;">outdir</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/merge/align-falcon'</span>
+<span style="color: #008b8b;">out</span>=<span style="color: #8b2252;">"</span><span style="color: #008b8b;">$outdir</span><span style="color: #8b2252;">/$(basename </span><span style="color: #008b8b;">$bam</span><span style="color: #8b2252;">).sorted.bam"</span>
+<span style="color: #008b8b;">samtools</span>=<span style="color: #8b2252;">'/mnt/nfs1/software/miniconda2/bin/samtools'</span>
+<span style="color: #008b8b;">venv</span>=<span style="color: #8b2252;">'/mnt/nfs1/build/falcon/fc_env_171204/bin/activate'</span>
+
+<span style="color: #008b8b;">$samtools</span> sort -@ <span style="color: #008b8b;">$t</span> -O bam -T /tmp -o <span style="color: #008b8b;">$out</span> <span style="color: #008b8b;">$bam</span>
+sleep 5
+rm -f <span style="color: #008b8b;">$bam</span>
+bash -c <span style="color: #8b2252;">"source </span><span style="color: #008b8b;">$venv</span><span style="color: #8b2252;">; pbindex </span><span style="color: #008b8b;">$out</span><span style="color: #8b2252;">"</span>
+<span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] done: </span><span style="color: #008b8b;">$out</span><span style="color: #8b2252;">"</span>
+</pre>
+</div>
+
+<p>
+Submit jobs:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sbatch -D <span style="color: #008b8b;">$PWD</span> -c48 --mem=70000 -a 1-15 -o /mnt/nfs1/slurm-log/blasr-%A_%a.out -e /mnt/nfs1/slurm-log/blasr-%A_%a.err blasr-falcon-for-arrow-sort-bam.sh
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc1bde49" class="outline-3">
+<h3 id="orgc1bde49"><span class="section-number-3">4.3</span> Run arrow</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #a52a2a;">cd</span> /mnt/nfs48/p1/ew/merge/align-falcon
+ls /mnt/nfs48/p1/ew/merge/align-falcon &gt;list-sorted-bam.fofn
+bash
+<span style="color: #a52a2a;">source</span> /mnt/nfs1/falcon/fc_env_171104/bin/activate
+arrow -j 8 list-sorted-bam.fofn -r /mnt/nfs48/p1/ew/merge/p_ctg.fa -o t2.gff -o t2.fasta -o t2.fastq
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org402cb76" class="outline-3">
+<h3 id="org402cb76"><span class="section-number-3">4.4</span> Combine fasta generated by arrow</h3>
+<div class="outline-text-3" id="text-4-4">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #a52a2a;">cd</span> /mnt/nfs48/p1/ew/merge/align-falcon/split-fasta
+cat *.fasta &gt;../polished-falcon.fasta
+cat *.fastq | gzip -c &gt;../polished-falcon.fastq.gz
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga3bf761" class="outline-2">
+<h2 id="orga3bf761"><span class="section-number-2">5</span> Polishing by illumina reads (for FALCON assembly)</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+<code>pilon.sh</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/bin/</span><span style="color: #a52a2a;">bash</span>
+<span style="color: #a52a2a;">set</span> -eu
+<span style="color: #008b8b;">addition</span>=<span style="color: #008b8b;">$1</span>
+<span style="color: #008b8b;">java</span>=/mnt/nfs1/software/jre1.8.0_162/bin/java
+<span style="color: #008b8b;">ref</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/merge/align-falcon/polished-falcon.fasta'</span>
+<span style="color: #008b8b;">bam_L004</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/data/nextomics-PE-reads/L004-sorted.bam'</span>
+<span style="color: #008b8b;">bam_L005</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/map-back-to-polished-contig/L005-sorted.bam'</span>
+<span style="color: #008b8b;">bam_W2</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/map-back-to-polished-contig/W2-sorted.bam'</span>
+<span style="color: #008b8b;">contig_id</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/merge/align-falcon/polished-falcon.fasta.id'</span>
+<span style="color: #008b8b;">line</span>=$(expr <span style="color: #008b8b;">$addition</span> + <span style="color: #008b8b;">${SLURM_ARRAY_TASK_ID}</span>)
+<span style="color: #008b8b;">targets</span>=$(sed -n <span style="color: #008b8b;">${line}</span>p <span style="color: #008b8b;">$contig_id</span>)
+<span style="color: #008b8b;">mem</span>=12
+<span style="color: #008b8b;">t</span>=<span style="color: #008b8b;">$SLURM_CPUS_PER_TASK</span>
+
+<span style="color: #a52a2a;">cd</span> /mnt/nfs48/p1/ew/polish-pilon
+<span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] [$(hostname)] begin"</span>
+<span style="color: #008b8b;">$java</span> -Xmx<span style="color: #008b8b;">${mem}</span>G -jar /mnt/nfs1/software/ew/pilon-1.22.jar <span style="color: #8b2252;">\</span>
+      --genome <span style="color: #008b8b;">$ref</span> <span style="color: #8b2252;">\</span>
+      --frags <span style="color: #008b8b;">$bam_L004</span> <span style="color: #8b2252;">\</span>
+      --frags <span style="color: #008b8b;">$bam_L005</span> <span style="color: #8b2252;">\</span>
+      --frags <span style="color: #008b8b;">$bam_W2</span> <span style="color: #8b2252;">\</span>
+      --output pilon-<span style="color: #008b8b;">$targets</span> <span style="color: #8b2252;">\</span>
+      --changes <span style="color: #8b2252;">\</span>
+      --diploid <span style="color: #8b2252;">\</span>
+      --targets <span style="color: #008b8b;">$targets</span> <span style="color: #8b2252;">\</span>
+      --threads <span style="color: #008b8b;">$t</span>
+<span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] [$(hostname)] end"</span>
+</pre>
+</div>
+
+<p>
+Total number of contigs: 16882.
+</p>
+
+<p>
+Submit Pilon jobs:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 1000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 2000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 3000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 4000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 5000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 6000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 7000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 8000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 9000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 10000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 11000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 12000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 13000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 14000
+sbatch -c 4 --mem=10G -a 1-1000 -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 15000
+sbatch -c 4 --mem=10G -a 1-882  -o ./log/%A_%a.out -e ./log/%A_%a.err pilon.sh 16000
+</pre>
+</div>
+
+<p>
+Cat Pilon outputs to single fasta: <code>ew-polished-pilon.fasta</code>.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org2980a8d" class="outline-2">
+<h2 id="org2980a8d"><span class="section-number-2">6</span> Scaffolding by Hi-C reads</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+<code>hic-lachesis-mapping.sh</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/</span><span style="color: #a52a2a;">bash</span>
+<span style="color: #a52a2a;">set</span> -eux
+<span style="color: #008b8b;">fq1</span>=<span style="color: #008b8b;">$1</span>
+<span style="color: #008b8b;">fq2</span>=<span style="color: #008b8b;">$2</span>
+<span style="color: #008b8b;">cpu</span>=<span style="color: #008b8b;">$3</span>
+<span style="color: #008b8b;">fq1_out</span>=$(basename <span style="color: #008b8b;">$fq1</span>).sai
+<span style="color: #008b8b;">fq2_out</span>=$(basename <span style="color: #008b8b;">$fq2</span>).sai
+<span style="color: #008b8b;">sampe_out</span>=$(basename <span style="color: #008b8b;">$fq1</span>)-sorted.bam
+<span style="color: #008b8b;">markdup_out</span>=$(basename <span style="color: #008b8b;">$fq1</span>)-markdup.bam
+<span style="color: #008b8b;">markdup_sorted_out</span>=$(basename <span style="color: #008b8b;">$fq1</span>)-markdup-sorted.bam
+<span style="color: #008b8b;">ref</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/polish-pilon/ew-polished-pilon.fasta'</span>
+<span style="color: #a52a2a;">export</span> <span style="color: #008b8b;">PATH</span>=/mnt/nfs1/software/miniconda2/bin:<span style="color: #008b8b;">$PATH</span>
+
+<span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] [$(hostname)] processing </span><span style="color: #008b8b;">$fq1</span><span style="color: #8b2252;"> </span><span style="color: #008b8b;">$fq2</span><span style="color: #8b2252;">"</span>
+bwa aln -t <span style="color: #008b8b;">$cpu</span> <span style="color: #008b8b;">$ref</span> <span style="color: #008b8b;">$fq1</span> &gt;<span style="color: #008b8b;">$fq1_out</span>
+bwa aln -t <span style="color: #008b8b;">$cpu</span> <span style="color: #008b8b;">$ref</span> <span style="color: #008b8b;">$fq2</span> &gt;<span style="color: #008b8b;">$fq2_out</span>
+
+bwa sampe <span style="color: #8b2252;">\</span>
+    <span style="color: #008b8b;">$ref</span> <span style="color: #8b2252;">\</span>
+    <span style="color: #008b8b;">$fq1_out</span> <span style="color: #8b2252;">\</span>
+    <span style="color: #008b8b;">$fq2_out</span> <span style="color: #8b2252;">\</span>
+    <span style="color: #008b8b;">$fq1</span> <span style="color: #8b2252;">\</span>
+    <span style="color: #008b8b;">$fq2</span> <span style="color: #8b2252;">\</span>
+    | samtools view -@ 8 -bS -F 4 -q 1 - <span style="color: #8b2252;">\</span>
+    | samtools sort -n -@ <span style="color: #008b8b;">$cpu</span> -O bam -T /tmp - &gt;<span style="color: #008b8b;">$sampe_out</span>
+
+rm -f <span style="color: #008b8b;">$fq1_out</span> <span style="color: #008b8b;">$fq2_out</span>
+perl /mnt/nfs1/build/LACHESIS/bin/PreprocessSAMs-v2.pl <span style="color: #008b8b;">$sampe_out</span> <span style="color: #008b8b;">$ref</span>
+ls -hl <span style="color: #008b8b;">$sampe_out</span>
+rm -f <span style="color: #008b8b;">$sampe_out</span>
+<span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] [$(hostname)] done </span><span style="color: #008b8b;">$fq1</span><span style="color: #8b2252;"> (and its pair)"</span>
+</pre>
+</div>
+
+<p>
+<code>hic-lachesis-mapping-batch.sh</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #a52a2a;">set</span> -eu
+<span style="color: #008b8b;">logdir</span>=<span style="color: #008b8b;">$PWD</span>
+<span style="color: #008b8b;">cpu</span>=16
+<span style="color: #a52a2a;">for</span> f<span style="color: #a52a2a;"> in</span> $<span style="color: #008b8b;">@</span>; <span style="color: #a52a2a;">do</span>
+    <span style="color: #008b8b;">f2</span>=$(<span style="color: #a52a2a;">echo</span> <span style="color: #008b8b;">$f</span> | sed <span style="color: #8b2252;">'s/_R1/_R2/'</span>)
+    sbatch -c<span style="color: #008b8b;">$cpu</span> --mem=16G -o <span style="color: #008b8b;">$logdir</span>/%j.out -e <span style="color: #008b8b;">$logdir</span>/%j.err hic-lachesis-mapping.sh <span style="color: #008b8b;">$f</span> <span style="color: #008b8b;">$f2</span> <span style="color: #008b8b;">$cpu</span>
+<span style="color: #a52a2a;">done</span>
+</pre>
+</div>
+
+<p>
+Submit <code>hic-lachesis-mapping-batch.sh</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bash hic-lachesis-mapping.sh *_R1*.fastq.gz
+</pre>
+</div>
+
+<p>
+<code>ew-all-data.ini</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-conf"><span style="color: #008b8b;">SPECIES</span> = ew
+<span style="color: #008b8b;">OUTPUT_DIR</span> = /mnt/nfs48/p1/ew/hi-c/lachesis/run
+<span style="color: #008b8b;">DRAFT_ASSEMBLY_FASTA</span> = /mnt/nfs48/p1/ew/polish-pilon/ew-polished-pilon.fasta
+<span style="color: #008b8b;">SAM_DIR</span> = /mnt/nfs48/p1/ew/hi-c/lachesis/hic-bam-for-lachesis
+<span style="color: #008b8b;">SAM_FILES</span> = HS180713-2_QY-25_S1_L003_R1_001.fastq000.fastq.gz-sorted.REduced.paired_only.bam \
+            HS180713-2_QY-25_S1_L003_R1_001.fastq001.fastq.gz-sorted.REduced.paired_only.bam \
+            HS180713-2_QY-25_S1_L003_R1_001.fastq002.fastq.gz-sorted.REduced.paired_only.bam \
+            <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">... other bam files ...</span>
+<span style="color: #008b8b;">RE_SITE_SEQ</span> = GATC
+<span style="color: #008b8b;">USE_REFERENCE</span> = 0
+<span style="color: #008b8b;">SIM_BIN_SIZE</span> = 0
+<span style="color: #008b8b;">DO_CLUSTERING</span> = 1
+<span style="color: #008b8b;">DO_ORDERING</span>   = 1
+<span style="color: #008b8b;">DO_REPORTING</span>  = 1
+<span style="color: #008b8b;">OVERWRITE_GLM</span> = 0
+<span style="color: #008b8b;">OVERWRITE_CLMS</span> = 0
+<span style="color: #008b8b;">CLUSTER_N</span> = 36
+<span style="color: #008b8b;">CLUSTER_CONTIGS_WITH_CENS</span> = -1
+<span style="color: #008b8b;">CLUSTER_MIN_RE_SITES</span> = 25
+<span style="color: #008b8b;">CLUSTER_MAX_LINK_DENSITY</span> = 2
+<span style="color: #008b8b;">CLUSTER_NONINFORMATIVE_RATIO</span> = 3
+<span style="color: #008b8b;">CLUSTER_DRAW_HEATMAP</span> = 1
+<span style="color: #008b8b;">CLUSTER_DRAW_DOTPLOT</span> = 1
+<span style="color: #008b8b;">ORDER_MIN_N_RES_IN_TRUNK</span> = 15
+<span style="color: #008b8b;">ORDER_MIN_N_RES_IN_SHREDS</span> = 15
+<span style="color: #008b8b;">ORDER_DRAW_DOTPLOTS</span> = 1
+<span style="color: #008b8b;">REPORT_EXCLUDED_GROUPS</span> = -1
+<span style="color: #008b8b;">REPORT_QUALITY_FILTER</span> = 1
+<span style="color: #008b8b;">REPORT_DRAW_HEATMAP</span> = 1
+</pre>
+</div>
+
+<p>
+<code>hic-lachesis-all-data-args.sh</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/usr/bin/</span><span style="color: #a52a2a;">bash</span>
+<span style="color: #a52a2a;">trap exit</span> INT
+<span style="color: #a52a2a;">set</span> -eux -o pipefail
+<span style="color: #008b8b;">outdir_dir</span>=$(readlink -f <span style="color: #008b8b;">$1</span>)
+<span style="color: #008b8b;">n</span>=<span style="color: #008b8b;">$2</span>
+<span style="color: #008b8b;">shred</span>=<span style="color: #008b8b;">$3</span>                        <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">default: 15</span>
+<span style="color: #008b8b;">CLUSTER_MIN_RE_SITES</span>=<span style="color: #008b8b;">$4</span>         <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">default: 25</span>
+<span style="color: #008b8b;">ORDER_MIN_N_RES_IN_TRUNK</span>=<span style="color: #008b8b;">$5</span>     <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">default: 15</span>
+<span style="color: #008b8b;">ini_orig</span>=<span style="color: #8b2252;">'ew-all-data.ini'</span>
+<span style="color: #008b8b;">ref</span>=<span style="color: #8b2252;">'/mnt/nfs48/p1/ew/polish-pilon/ew-polished-pilon.fasta'</span>
+<span style="color: #008b8b;">prefix</span>=<span style="color: #8b2252;">"ew-</span><span style="color: #008b8b;">$n</span><span style="color: #8b2252;">-</span><span style="color: #008b8b;">$shred</span><span style="color: #8b2252;">-</span><span style="color: #008b8b;">$CLUSTER_MIN_RE_SITES</span><span style="color: #8b2252;">-</span><span style="color: #008b8b;">$ORDER_MIN_N_RES_IN_TRUNK</span><span style="color: #8b2252;">"</span>
+<span style="color: #008b8b;">outdir</span>=<span style="color: #008b8b;">$outdir_dir</span>/<span style="color: #008b8b;">$prefix</span>
+<span style="color: #008b8b;">ini</span>=<span style="color: #008b8b;">$outdir</span>/<span style="color: #008b8b;">$prefix</span>.ini
+mkdir -p <span style="color: #008b8b;">$outdir</span>
+<span style="color: #a52a2a;">cd</span> <span style="color: #008b8b;">$outdir</span>
+sed -re <span style="color: #8b2252;">"s/^CLUSTER_N = [0-9]+/CLUSTER_N = </span><span style="color: #008b8b;">$n</span><span style="color: #8b2252;">/;</span>
+<span style="color: #8b2252;">         s|^OUTPUT_DIR = .+|OUTPUT_DIR = </span><span style="color: #008b8b;">$outdir</span><span style="color: #8b2252;">|;</span>
+<span style="color: #8b2252;">         s/ORDER_MIN_N_RES_IN_SHREDS = [0-9]+/ORDER_MIN_N_RES_IN_SHREDS = </span><span style="color: #008b8b;">$shred</span><span style="color: #8b2252;">/;</span>
+<span style="color: #8b2252;">         s/^CLUSTER_MIN_RE_SITES = [0-9]+/CLUSTER_MIN_RE_SITES = </span><span style="color: #008b8b;">$CLUSTER_MIN_RE_SITES</span><span style="color: #8b2252;">/;</span>
+<span style="color: #8b2252;">         s/^ORDER_MIN_N_RES_IN_TRUNK = [0-9]+/ORDER_MIN_N_RES_IN_TRUNK = </span><span style="color: #008b8b;">$ORDER_MIN_N_RES_IN_TRUNK</span><span style="color: #8b2252;">/"</span> <span style="color: #8b2252;">\</span>
+    <span style="color: #008b8b;">$ini_orig</span> &gt;<span style="color: #008b8b;">$ini</span>
+<span style="color: #008b8b;">simg</span>=$(ls -1 ~/software/ubuntu_*.simg | tail -n1)
+<span style="color: #008b8b;">log_prefix</span>=<span style="color: #008b8b;">$prefix</span>
+{
+    <span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] [$(hostname)]"</span>
+    singularity exec -B /mnt <span style="color: #008b8b;">$simg</span> /home/bio/bin/LACHESIS/run-Lachesis.sh <span style="color: #008b8b;">$ini</span>
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">/mnt/nfs1/build/LACHESIS/bin/Lachesis </span><span style="color: #008b8b;">$ini</span>
+    [ -e REPORT.txt ] <span style="color: #ff4500;">&amp;&amp;</span> mv REPORT.txt REPORT-n<span style="color: #008b8b;">$n</span>-shred-<span style="color: #008b8b;">$shred</span>.txt
+    [ -e HiC_heatmap.jpg ] <span style="color: #ff4500;">&amp;&amp;</span> mv HiC_heatmap.jpg <span style="color: #008b8b;">$prefix</span>.jpg
+    <span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] [$(hostname)]"</span>
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">generate scaffold fasta</span>
+    singularity exec -B /mnt <span style="color: #008b8b;">$simg</span> perl /home/bio/bin/LACHESIS/bin/CreateScaffoldedFasta.pl <span style="color: #008b8b;">$ref</span> <span style="color: #008b8b;">$outdir</span>
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">perl /mnt/nfs1/build/LACHESIS/bin/CreateScaffoldedFasta.pl </span><span style="color: #008b8b;">$ref</span><span style="color: #7f7f7f;"> </span><span style="color: #008b8b;">$outdir</span>
+    <span style="color: #a52a2a;">echo</span> <span style="color: #8b2252;">"[$(date)] [$(hostname)]"</span>
+} 1&gt; &gt;(tee -a <span style="color: #008b8b;">$log_prefix</span>.out) 2&gt; &gt;(tee -a <span style="color: #008b8b;">$log_prefix</span>.err)
+</pre>
+</div>
+
+<p>
+Run LACHESIS:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bash hic-lachesis-all-data-args.sh ./ew/hic/lachesis 43 15 50 100
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org85af174" class="outline-2">
+<h2 id="org85af174"><span class="section-number-2">7</span> Gap closing</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<code>pbjelly-config.xml</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-xml">&lt;<span style="color: #0000ff;">jellyProtocol</span>&gt;
+  &lt;<span style="color: #0000ff;">reference</span>&gt;/mnt/nfs48/p1/ew/gap-closing/Lachesis_assembly-43-15-50-100.fasta&lt;/<span style="color: #0000ff;">reference</span>&gt;
+  &lt;<span style="color: #0000ff;">outputDir</span>&gt;/mnt/nfs48/p1/ew/gap-closing/pbjelly-out&lt;/<span style="color: #0000ff;">outputDir</span>&gt;
+  &lt;<span style="color: #0000ff;">blasr</span>&gt;-minMatch 8 -sdpTupleSize 8 -minPctIdentity 75 -bestn 1 -nCandidates 10 -maxScore -500 -nproc 8 -noSplitSubreads&lt;/<span style="color: #0000ff;">blasr</span>&gt;
+  &lt;<span style="color: #0000ff;">input</span> <span style="color: #008b8b;">baseDir</span>=<span style="color: #8b2252;">"/mnt/nfs48/p1/ew/subreads-fastq-split/"</span>&gt;
+    &lt;<span style="color: #0000ff;">job</span>&gt;m54143_170908_111957.subreads.fastq.001.fastq&lt;/<span style="color: #0000ff;">job</span>&gt;
+    &lt;<span style="color: #0000ff;">job</span>&gt;m54143_170908_111957.subreads.fastq.002.fastq&lt;/<span style="color: #0000ff;">job</span>&gt;
+    &lt;<span style="color: #0000ff;">job</span>&gt;m54143_170908_111957.subreads.fastq.003.fastq&lt;/<span style="color: #0000ff;">job</span>&gt;
+    <span style="color: #7f7f7f;">&lt;!-- </span><span style="color: #7f7f7f;">&lt;job&gt;...other fastq files...&lt;/job&gt; </span><span style="color: #7f7f7f;">--&gt;</span>
+  &lt;/<span style="color: #0000ff;">input</span>&gt;
+&lt;/<span style="color: #0000ff;">jellyProtocol</span>&gt;
+</pre>
+</div>
+
+<p>
+<code>run-pbjelly.sh</code>:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">!/bin/</span><span style="color: #a52a2a;">bash</span>
+<span style="color: #a52a2a;">trap exit</span> INT
+<span style="color: #a52a2a;">set</span> -e
+<span style="color: #008b8b;">xml</span>=<span style="color: #8b2252;">'pbjelly-config.xml'</span>
+<span style="color: #a52a2a;">export</span> <span style="color: #008b8b;">PATH</span>=/home/bio/software/blasr-1.3.1-binary:<span style="color: #008b8b;">$PATH</span>
+<span style="color: #a52a2a;">export</span> <span style="color: #008b8b;">PATH</span>=/home/bio/software/networkx-virtualenv/bin:<span style="color: #008b8b;">$PATH</span>
+<span style="color: #a52a2a;">export</span> <span style="color: #008b8b;">PATH</span>=/home/bio/software/PBSuite_15.8.24/bin:<span style="color: #008b8b;">$PATH</span>
+<span style="color: #a52a2a;">export</span> <span style="color: #008b8b;">PATH</span>=/home/bio/software/PBSuite_15.8.24/pbsuite/jelly:<span style="color: #008b8b;">$PATH</span>
+<span style="color: #a52a2a;">export</span> <span style="color: #008b8b;">PATH</span>=/home/bio/software/PBSuite_15.8.24/pbsuite/utils:<span style="color: #008b8b;">$PATH</span>
+<span style="color: #a52a2a;">export</span> <span style="color: #008b8b;">PYTHONPATH</span>=/home/bio/software/PBSuite_15.8.24:<span style="color: #008b8b;">$PYTHONPATH</span>
+<span style="color: #a52a2a;">export</span> <span style="color: #008b8b;">PYTHONPATH</span>=/home/bio/software/networkx-virtualenv/lib/python2.7/site-packages:<span style="color: #008b8b;">$PYTHONPATH</span>
+Jelly.py setup <span style="color: #008b8b;">$xml</span>
+Jelly.py mapping <span style="color: #008b8b;">$xml</span>
+Jelly.py support <span style="color: #008b8b;">$xml</span>
+Jelly.py extraction <span style="color: #008b8b;">$xml</span>
+Jelly.py assembly <span style="color: #008b8b;">$xml</span> -x <span style="color: #8b2252;">"--nproc=32"</span>
+Jelly.py output <span style="color: #008b8b;">$xml</span>
+</pre>
+</div>
+
+<p>
+Run pbjelly:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">bash run-pbjelly.sh
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
